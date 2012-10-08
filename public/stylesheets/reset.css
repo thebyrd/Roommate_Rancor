@@ -1,0 +1,464 @@
+@charset "UTF-8";
+/*** MY BOILERPLATE CSS. Informed heavily by: Nicole Sullivan, Eric Meyer, Yahoo YUI Team, Nicolas Gallagher, Paul Irish, and many others. ***/
+
+
+
+/***** RESET (some of these elements no longer exist�like applet, font, & acronym�but i've left most of them because it can only help). *****/
+	/* Basic Meyer-esque Reset, not including links, lists, or <q>/<blockquote> */
+	html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, cite, code,
+	del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+	fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, 
+	footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video  
+	{margin:0;padding:0;border:0;font:inherit;outline:0;font-size:100%;vertical-align: baseline;background:transparent;} 
+	body { line-height: 1; } table{border-collapse:collapse;border-spacing:0;}
+	
+	/* my reset additions */
+	a {margin:0;padding:0;border:0;font:inherit;font-size:100%;vertical-align:baseline;background:transparent} /* Add back the Meyer Reset on  <a>'s except for outline, which we often want to leave native  */
+	button, input, select, textarea, optgroup, option { margin: 0; font-size:100%; line-height: inherit !important; /* FF */} /* form resets */
+	
+	/* yui reset additions */
+	html{color:#000; background:#FFF; }
+	caption,th{text-align:left; }
+	legend { color:#000; /*because legend doesn't inherit in IE */ }
+	input,textarea,select{ font-family:inherit; font-size:inherit; font-weight:inherit; }
+	
+	/* CAN I DO MORE EXTENSIVE FORM RESET W/O HURTING NATIVE FEEL?
+	   YES: http://formalize.me/, though I wouldn't take it quite so far.
+	*/
+	
+	/* HTML5 element display */
+	article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; font-size:100%; }
+	audio[controls], canvas, video { display: inline-block; *display: inline; *zoom: 1; }
+	
+	/* normalizers � i.e. that make cross-browser behavior consistent, rather than the "blast-it-all-out" reset */
+	textarea { overflow: auto; } /* Tweak for IE www.sitepoint.com/blogs/2010/08/20/ie-remove-textarea-scrollbars/ */
+	legend { *margin-left: -7px; } /* IE always shifts legends right by 7px (regardless of text size). */
+	img { -ms-interpolation-mode: bicubic; } /* Fix IE7's nasty image resizing */
+	svg:not(:root) { overflow: hidden; } /* Correct overflow displayed oddly in IE9 */
+	/* 1. Define line-height as normal to match FF3/4 (set using !important in the UA stylesheet)
+	 * 2. Correct inner spacing displayed oddly in IE6/7 http://is.gd/hVSb4W */
+	button, input { line-height: normal; *overflow: visible; *width: auto; }
+	/* Allows styling of clickable form elements in iOS */
+	button, input[type="reset"], input[type="button"], input[type="submit"] { -webkit-appearance: button; }
+	input[type="checkbox"], input[type="radio"] { box-sizing: border-box; }
+	input[type="search"] { -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+	button, input, select { vertical-align: baseline; *vertical-align: middle; }
+	textarea { vertical-align: top; }
+	/* Remove inner padding in FF3/4. Must keep border or we change element's visual character; introduce browser discrepancies 
+	 * www.sitepen.com/blog/2008/05/14/the-devils-in-the-details-fixing-dojos-toolbar-buttons/ */
+	button::-moz-focus-inner, input::-moz-focus-inner { padding: 0; }
+	/* Declare sans-serif fallback for proper sizing: en.wikipedia.org/wiki/User:Davidgothberg/Test59 */
+	pre, code, kbd, samp, tt { font-family: monospace, sans-serif; _font-family: 'courier new', monospace; }
+
+
+
+/***** GENERIC EXTENDERS (i.e. CLASSES TO ADD TO ELEMENTS FOR SPECIAL LAYOUT FEATURES) *****/
+	.ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; /* For image replacement */
+		  text-align: left; direction: ltr; color:transparent !important; }
+	
+	.hidden { display: none; visibility: hidden; } /* Hides from screenreaders and visual users. */
+	.invisible { visibility: hidden; } /* Hides visually and from screenreaders, but maintain layout */
+	
+	/* Hides from visual users but not screenreaders. see http://yaccessibilityblog.com/library/css-clip-hidden-content.html */
+	.visually-hidden, .accessibility {position: absolute !important; border:0 !important; height: 1px !important; padding:0 !important;
+									  width: 1px !important; clip: rect(0 0 0 0); margin: -1px !important; overflow: hidden; }
+	/* Extends the .visuallyhidden class to allow the element to be focusable when navigated to via the keyboard: drupal.org/node/897638 */
+	.visuallyhidden.focusable:active, .accessibility.focusable:active, .visuallyhidden.focusable:focus, .accessibility.focusable:focus 
+	{ clip:auto; height:auto !important; margin:0 !important; overflow:visible !important; position:static !important; width:auto !important; }
+	
+	/* Clearfix. Makes a parent expand to contain floated children. Described in style.css in more detail than you ever wanted. 
+	   For the rare cases this doesn't work: http://nicolasgallagher.com/micro-clearfix-hack/ */
+	.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+	.clearfix:after { clear: both; }
+	.clearfix {*zoom: 1; }
+	
+	.dontwrap {white-space:nowrap; }
+
+
+
+/***** ELEMENT STYLE ******/
+	/* STOCK TREATMENTS (WILL RARELY, IF EVER, REQUIRE CUSTOMIZATION) */
+	html 
+	{ overflow-y: scroll; /* Always force a scrollbar in non-IE on overflow. Prevents a jumpy page. */ 
+	  -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; /* Prevent mobile text size adjust on device orientation change, 
+	  without disabling user zoom www.456bereastreet.com/archive/201012/controlling_text_size_in_safari_for_ios_without_disabling_user_zoom/ */
+	  -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	input, select, textarea, button, label, a {-webkit-tap-highlight-color:#999; } /* https://github.com/necolas/normalize.css/issues/23 */
+	
+	body { text-rendering: optimizeLegibility; font-family:'lucida grande', 'tahoma', sans-serif; /* Supposed to turn on kerning & common ligatures. 
+	In Firefox, those are enabled regardless of what you set this value to. In Webkit, it only affects kerning. Has performance implications, 
+	but absolutely worth including as a default to me. */ 
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    hyphens: auto;
+	color:#333;
+	}
+		
+	ol {list-style-position:outside; list-style-type: decimal; }
+	strong, b { font-weight: bold; }
+	em, i {font-style:italic; }
+	
+	del { text-decoration: line-through; }
+	cite {font-style:normal; } /* This cite rules is controvesial, as HTML5 cites only apply to works, which should be italicized. But HTML4
+	cites could apply to people (not italicized), & I plan to use the element that way still. So I've added mixins below to handle italics. */
+	abbr[title], dfn[title] { border-bottom: 1px dotted; cursor: help; }
+	
+	table { border-collapse: collapse; border-spacing: 0; } /* tables still need 'cellspacing="0"' in the markup */
+	th {font-weight: bold; vertical-align: bottom; }
+	td {font-weight: normal; vertical-align: top; }
+	hr {display:block; }
+	img {vertical-align: middle; } /* Remove the gap between images and borders on image containers http://h5bp.com/e */																					
+	
+	/* Align checkboxes, radios, text inputs with their label by: Thierry Koblentz tjkdesign.com/ez-css/css/base.css  */
+	input[type="radio"] { vertical-align: bottom; }
+	input[type="checkbox"] { vertical-align: text-bottom; *vertical-align: baseline;}
+	.ie6 input { vertical-align: text-bottom; }																			   
+	
+	label, input[type="button"], input[type="submit"], input[type="reset"], input[type="image"], button { cursor: pointer; } /* Hand cursor on clickable inputs. */
+	
+	sup, sub { line-height: 0; position: relative; vertical-align: baseline; /* use position relative to maintain the rythym */ }
+	
+	/* wrap lines that are too long for the <pre> rather than using an horiz scrollbar. can be overriden with .nowrap */
+	code, pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; /* IE */ } 
+	
+	/* Responsive images and other embedded objects
+	   Note: keeping IMG here will cause problems if you're using foreground images as sprites, like, say for Google Maps custom placemarkers. 
+	   There has been a report of problems with standard Google maps as well, but we haven't been able to duplicate or diagnose the issue. */
+	img, object, embed {max-width: 100%; }
+	
+	/*links*/
+	a {color: #709f03;text-decoration:none;}
+	a:visited { color:#b29c99; }
+	a:hover, a:focus {text-decoration:underline;} /* Set only colors & text-decoration here, b/c I'm not doing any outline suppression/addition (outline will just be the
+	native thing, whenever it arises). I think it's best, but here's an alternate take: people.opera.com/patrickl/experiments/keyboard/test */
+	
+	input:valid, textarea:valid   {}
+	input:invalid, textarea:invalid {} /* HTML5 BP Value: 
+	{border-radius: 1px; -moz-box-shadow: 0px 0px 5px red; -webkit-box-shadow: 0px 0px 5px red; box-shadow: 0px 0px 5px red; } 
+	with a fallback of .no-boxshadow input:invalid, .no-boxshadow textarea:invalid { background-color: #f0dddd; } */	
+	
+	/* td HTML5 BP Value: vertical-align: top;, which I removed.
+	   When two cells have different heights, because of different leading or whatever, the row will expand to hold the biggest cell. 
+	   Using vertical align top, the text in the smaller cell will stay put (i.e. in the same position it would've been w/o the bigger cell).
+	   Extra whitespace will simply fill the bottom of it's cell. With vertical-align:baseline; (the default), the baseline for all the cells
+	   will be that of the tallest cell, so the text in the shorter cell will remain centered within that cell.
+	*/
+	td { font-variant-numeric: lining-nums tabular-nums; -moz-font-feature-settings:"lnum=1, tnum=1"; /* for now. sigh. */ } 
+	
+	dt:after { content: ': '; } /*should be a colon in my BP, is a dash for this project */
+	
+	ins {background:#FFC; text-decoration:none; padding:.2em; /*doesn't mess w/line-height; improves "higlighted" effect */ }
+	ins:after {content:' (Addition)'; font-style:italic; }
+	ins[data-humandate]:after {content:' (Added 'attr(data-humandate)')'; font-style:italic; }
+	ins em {text-transform:uppercase; }
+	ins strong {font-weight:bold; }
+	
+	sup, sub {font-size:80%; text-shadow: 0 0 0; /* font must be smaller; slight shadow compesates for the thinning (only has effect in FF) */}
+	sup {top: -0.4em; left: .025em; }  /* LEFT property set carefully by experimenting; intentionally not on <sub>; */
+	sub {bottom: -0.2em; }             /* only applicable probably to 16px Georgia on Mac. */ 
+	
+	/* ::-moz-selection { text-shadow: none; } ::selection { text-shadow: none; } These selection declarations must be separate, 
+	   and must be commente out unless used in their entirety (i.e. color & bg color are set)�bc setting any property (e.g. just text-shadow)
+	   will override the ENTIRE default/user-agent ::selection declaration block.  */
+	
+	/*See Bringhurst p. 55 for traditional rules of varying font treatment (weight, italics, caps, etc) across headings */
+	h1, h2, h3, h4 {font-weight:bold; }
+
+
+	/* CUSTOM TREATMENTS AS APPLY TO TYPE BASELINE. I personally find it valuable to separate these rules from the above. */
+	    /* Font sizing/spacing (for Kievit):
+		      Uses 16px as the body size and 1.75 as the leading (which would be generous usually, but works well w/ this sans-serif body copy.
+		      This gives a 28px baseline, which is subdivided into 2 groups of 14.
+		
+		     Font sizes were found using a modular scale (http://modularscale.com/) with 16 and 28 as the two numbers and a 3:2 ratio
+			 
+		     They are: 63, 54, 42, 36, 24, 18.667, 16, 12.445, 10.667, 8.297, 7.111, 5.531.
+		     Their line-height is determined by context, but is set to fall on the baseline and be around 1.75 in long text blocks.
+		*/
+	body {font-size:1em; line-height: 1.75em; }   
+
+	h1, .h1 {font-size:2.25em; line-height:1.5555em; /* 36/56, or 2 lines */} 
+	h2, .h2 {font-size:1.5em; line-height:1.75em; /* 24/42, or 1.5 lines */ }
+	h3, .h3 {font-size:1.1666666em; line-height:1.5em; /* just above paragrpah size and bold italic */}
+	h4, .h4 {font-size:.875em; line-height:2em; text-transform:uppercase; top:.07142857em; position:relative; /* bold, paragraph size (but not, to emulate small caps) */ }
+		
+    article {padding-bottom:1.75em; }
+	section {padding-bottom:1.3125em; }
+    header, footer {margin-bottom:.875em; }
+
+	p, dl, ol, ul, figure, pre {font-size:1em; line-height:1.75em; /* same as body, by definition from modular scale. */}
+	p, dl, ol, ul, dd, blockquote, figure, pre, table {margin-bottom:.875em; } /*Give basic elements in-flow half a line of margin-bottom. */
+	
+	
+/***** COMPLEX OBJECTS (i.e. beyond elements) *****/
+	/* Guidelines: 
+		1. An object is a reusable concept based on a certain content requirement; objects should be named based on the content they require.
+		2. Separate structure from skin: use wrappers to skin elements, so your HTML can be flexible.
+	
+		3. Don't set widths or heights here; objects need to be flexible. Content determines height; width determined by a mixin or template.
+		4. Only define objects with regard to a specific tag when you're overriding some facet of that tag's style. (e.g. abbr.text-emoticon)	
+	
+		5. The only styles that should be scoped by object (.myObject p) are for things that: 
+			  1) the object absolutely must have (e.g. a paragraph), a
+			  2) must perform differently than that item outside the object. i.e. the exceptions for that component in that object.
+			  3) could never be styled that way outside the module.
+
+		   Almost every visual difference of a given element should be accounted for with a class on that element. 
+		     Styling an object's child with .module h2 to look different from your main h2 is usually bad; create an <h2 class="StyleX"> 
+		     over using .module h2 unless you're 100% sure that you won't need the normal h2 style in that module, and that StyleX h2 
+		     couldn't be needed anywhere else. If those aren't the case, you'll find yourself either using overrides or repeating code, 
+		     respectively. If both of those things are the case, then the h2 looks different really *because* it is in that module, 
+		     in which case  it's ok to style it with .moduleType h2 since that's lighter &, in some sense, more semantic.
+	
+		6. There's a tension between predictability/independence and specificity. 
+	  */
+	
+	
+	/* OOCSS OBJECTS **/
+	/* Note: .mod, describes a module See: https://github.com/stubbornella/oocss/wiki/Module */
+	.mod .inner{/*background: url(skin/transparent.png) repeat left top;*/}
+	.bd,.ft, .hd{display: inline-block; width:100%; *display:block; *width:auto; zoom:1;}
+	.inner:after,.hd:after,.bd:after,.ft:after{clear:both;display:block;visibility:hidden;overflow:hidden;height:0 !important;line-height:0;font-size:xx-large;content:" x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x ";}
+	.inner{position:relative;}
+	b{display:block;background-repeat:no-repeat;font-size:1%;position:relative;z-index:10;}
+	.tl, .tr, .bl, .br{height:10px; width:10px;float:left;}
+	.tl{background-position: left top;}
+	.tr{background-position: right top;}
+	.bl{background-position: left bottom;}
+	.br{background-position: right bottom;}
+	.br,.tr{float:right;}
+	.tr, .tl{overflow:hidden;margin-bottom:-32000px;}/* margin bottom needs to be < -9px */
+	.bl,.br{margin-top:-10px;}
+	.top{background-position:center top;}
+	.bottom{background-position:center bottom;_zoom:1;}/* this zoom required for IE5.5 only*/
+	
+	/* Note: Describes a container with an image/video and an associated block of text. I commented a few things out/changed basic properties.
+	   See: https://github.com/stubbornella/oocss/blob/master/core/media/media.css */ 
+	.media:after, .bd:after{clear:both;display:block;visibility:hidden;overflow:hidden;height:0 !important;line-height:0;font-size:xx-large;content:" x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x ";}
+	.media .bd{display:table-cell; zoom:1;}
+	.media .bd > :first-child{margin-top:0;}
+	.media .bd > :last-child{margin-bottom:0;}
+	.media .img {float:left; margin-right:1.1318897em; }
+	.media .img img{display:block;}
+	
+	
+	/* OTHER OBJECTS */
+	/* Notes: Describes an update. Designed for <ins class="update">...</ins>. When an <ins> is used following a <del>, it's an update. */
+	.update:after, del + ins:after {content: ' (Update)'; font-style:italic; }
+	.update[data-humandate]:after, del + ins[data-humandate]:after {content: ' (Update from ' attr(data-humandate) ')'; } 
+	
+	 
+	 /* Notes: Describes the masthead of a document, per ARIA's "banner" role. May only appear once per ARIA document (usually = once per page)
+		Required Markup: <* role="banner" class="banner">      //typically a <header>
+							 <* class="primary-heading"></*>   //typically an h1. Required.
+							 <* class="nav" role="navigation"> //Optional section. typically a <nav>.
+						</*> */
+	 .banner {border-bottom:.125em solid #eee; margin-bottom:2.375em; position:relative; }
+	 
+	 /* Notes: List of choosable options, like in a nav or toolbar. 
+	    Required Markup: <* class="optionList"><li (or class="li")>This option</li></*>. Each "li" usually has an <a> */
+	 .optionList {list-style-type:none; }
+	 .optionList .li, .optionList li {float:left; }
+	 .optionList li:last-child, .optionList .li:last-child {margin-right:0; }
+	 .optionList:after {clear:both;display:block;visibility:hidden;overflow:hidden;height:0 !important;line-height:0;font-size:xx-large;content:" x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x "; }
+	 
+	 /* Notes: Describes list of key�value metadata pairs; maps most neatly to HTML5's <dl> element. 
+	   Required Markup: Standard DL (<dl class="metadata-list"><dt>Term</dt><dd>Definition</dd></dl>) or a different element instead of <dl>, 	
+	                    with classes of .key and .value on the respective elements. */
+	.metadata-list dd, .metadata-list dt, .metadata-list .key, .metadata-list .value {display: inline; }
+	.metadata-list dt:before, .metadata-list .key:before {content: "\00000A"; white-space: pre; /* a line break between metadata elements */ }
+	.metadata-list dt:first-of-type:before, .metadata-list .key:first-of-type:before {content:''; }  
+	
+	.metadata-list-is-descriptor dt:after, .metadata-list-is-descriptor .key:after  {content:' \2014\ '; }
+	.metadata-list-is-equivalency dt:after, .metadata-list-is-equivalency .key:after {content:': '; }
+	
+	/* LAYOUT */
+	/* Notes: Describes the main template object. Used as the start of every layout. See  */
+	body{_text-align:center;}/* IE5.5 */
+	.page{margin:0 auto; width:46.625em; /* 746px 8 column grid */  _text-align:left;		padding:0 2em;        /* initial zoom don't put text right up to the edge). But margin on the left, so that there's space */
+		margin:1.75em auto 0 auto; /* for outside list bullets/numbers. */} /* wraps other template elems to set width */ /* text-align IE5.5 */
+
+    /* Main Template Extensions. Redefines width, margin, and padding on .page */
+    /** Clear each section */
+    .head:before, .foot:before, .page:before, .body:before, .body:after, .head:after, .foot:after, .page:after { content: "\0020"; display: block; height: 0; overflow: hidden; visibility: hidden; }
+	.body:after, .head:after, .foot:after, .page:after { clear:both; }
+    .page, .body, .foot, .head {*zoom: 1; }
+
+    /* Main Template Extensions. Redefines width, margin, and padding on .page */
+    .content-section, .grid-1, .grid-2, .grid-3, .grid-4, .grid-5, .grid-6, .grid-7, .grid-8
+	{
+	    float:left;
+		position: relative;
+        padding-left:0.1875em;
+        padding-right:0.1875em;
+        margin-right:0.875em;
+    }
+
+	.content-section:last-child, .last-col {
+    margin-right: 0;
+    /* line below prevents column drop from sub-pixel rounding errors (possible in any browsers w/ percentage grids).
+     * See complete the effect from above; see: http://www.stubbornella.org/content/2010/12/09/the-hacktastic-zoom-fix/
+     * However, it requires that each row have a dedicated wrapper div (so the */
+
+     display: table-cell; *display:block; *zoom:1; float:none; _position:relative; _left:-3px; _margin-right: -3px;width:auto;
+	}
+	.content-section:last-child:after, .last-col:after {
+    clear: both;
+    display: block;
+    visibility: hidden;
+    overflow: hidden;
+    height: 0 !important;
+    line-height: 0;
+    font-size: xx-large;
+    content: " x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x ";
+	}
+	
+    .grid-1 {width: 4.6875em; }
+    .grid-2 {width: 10.625em; }
+    .grid-3 {width: 16.5625em; }
+    .grid-4 {width: 22.5em; }
+    .grid-5 {width: 28.4375em; }
+    .grid-6 {width: 34.375em; }
+    .grid-7 {width: 40.3125em; }
+    .grid-8 {width: auto; /* avoid rounding issues */ margin-right:0; }
+	
+		
+	
+	/* ROLES */
+	.as-primary {}
+	.as-secondary {}
+	.as-supporting {}
+	
+	/* WITH */
+	.with-none {}
+	.with-primary { width:31em; margin-right:0; padding-right:0; }
+	.with-secondary {}
+	.with-article {}
+	.with-metadata {}
+	
+	/* CONTENT TYPES */
+	.content-section {margin-top:.75em; border-top:.35em solid blue; padding-top:.75em; }
+	.sub-section {margin-top:.85em; border-top:.05em solid black; margin-bottom:.85em; }
+	
+
+	/** OBJECT STYLES PERTAINING TO GRID AND TYPGRAPHIC BASELINE. AS WITH ELEMENT DEFAULTS, I FIND IT HELPFUL TO SEPARATE THESE. **/
+	.mod{margin:0; }
+
+	.media{margin-bottom:1.75em; }
+	
+	/* Notes: Describes a list housing complex info. Used visually to add more space around the list items.
+	   Required Markup: <* class="complex-info-list"><li (or class="li")>List item content</li>....</*>. 
+	                    Example, with dl: <dl class="complex-info-list"><div class="li"><dt>Term 1</dt><dd>Definition 1</dd></div></dl> 
+				
+	                    If some of the LI's have multiple flow items (<p>, <blockquote>, etc), which means we need even more space between each		
+	                    <li>, just put the contents of each <li> in one or more flow elements. eg: 
+	                    <ul class="complex-item-list">
+	                        <li><p>One pagraph li</p></li> //li gets more space below it from <p>
+	                        <li><p>Intro paragraph</p><blockquote><p>Supporting quote</p></blockquote></li>
+	                    </ul> */
+	   .complex-info-list > .li, .complex-info-list > li {margin-bottom:.875em; }
+	   .complex-info-list > .li:last-child, .complex-info-list > li:last-child, /* on the last li, and that li's last-child: no margin */
+	   .complex-info-list > .li:last-child > *:last-child, .complex-info-list > li:last-child > *:last-child {margin-bottom:0; padding:0; } 
+	   .complex-info-list > .li > *:last-child, .complex-info-list > li > *:last-child {padding-bottom:.875em; }
+	   
+	 .optionList .li, .optionList li {margin-right:1.1318897em; }
+	 
+	/* Notes: Describes a conversation. 
+	   Required Markup: */
+	 .dialog blockquote, .dialog p {margin-left:2em; }
+	 .dialog blockquote p {margin-left:0; }	 
+
+	/* Notes: Describes a section that offers a peak into each of the various subsections; e.g. for use on a homepage.
+	   Required Markup: <* class="overview"> (<* class="section">the peak into this section; usaully with a heading</*>)+ </*> */
+	.overview .section {margin-right: 1.1318897em; }
+	.overview .section:last-child {margin-right:0;}
+
+
+/***** MIXINS (i.e. Extenders that could apply to any object equally; a mixin should have same effect on every object) *****/
+	/* @TODO: http://webdesignerwall.com/tutorials/css-elastic-videos */
+	 .embed-16-9-video {width:31em; height:17.4375em; } /*make a 16:9 ratio embed span full width */
+	 .alert {color: #c82222; }  
+	 .title-of-work, .publication {font-style:italic; } 
+     
+     .progressively-disclose { color:#999; text-decoration:none; } /* Make an element recede until it's hovered */
+     a.progressively-disclose:hover {color:#137DBF; text-decoration:underline; }
+
+
+	/* Notes: If the first line of an <li> is bold, and that li has a numbered counter, we want that counter to be bold too. 
+	          Add a class="eachLIBeginsWithHeading" to an ol and every list item, including those in child ol's will get get a bold counter.
+	          That's a bit clunky maybe, but the best thing I can think of.  */
+	ol.eachLIBeginsWithHeading li {display: block; position:relative; overflow:visible; }
+    ol.eachLIBeginsWithHeading, ol.eachLIBeginsWithHeading ol { counter-reset: item 0; } 
+	ol.eachLIBeginsWithHeading li:before { content: counter(item) ". "; counter-increment: item; font-weight: bold; margin-right: 100%; position: absolute; right: 0.3em; vertical-align:baseline; }
+	ol.eachLIBeginsWithHeading li::-moz-list-number {font-weight:bold; /* mozilla's non-standard feature comes in handy */ }  
+
+
+
+/**** OBJECT�OBJECT, MIXIN�MIXIN, AND ELEMENT�ELEMENT INTERACTIONS ****/
+    /* Guidelines:
+       1. The code above has described independent, reusable objects. But, in some cases, the most sensible way to style an element is
+          through the interaction of multiple classes on it or elements around it. For instance, each object has default margins, in line w/
+          the baseline. But, in some cases, you'll want to modify that spacing systematically. The factors guiding that modification are:
+          1) what's surrounding the element; 2) how dense is the current layout. You could code the conclusion of your calculation into the
+          HTML directly with mixin classes that add margin or padding and behave predictably. But that would produce a lot of unsemantic code, 
+          open the door for inconsistencies between pages, and potentially make redesigns harder. So looking at the element's context
+          (with sibling selectors, styling by location with descendent selectors, using ajoining classes, etc) is probably the best way to go.
+	  
+       2. Because code here may occasionally have to be overwritten, and because it's fundamentally less predictable (.class.class2, e.g.,
+          means .class2 will apply differently (or only) to .class) than the code above, put as little code in this section as possible.
+    */
+   /* remove margin if the element is last in container, since containers have their own margin-bottom that we dont want to mess with */
+   p:last-child, dl:last-child, ol:last-child, ul:last-child, dd:last-child, article:last-child, section:last-child, nav:last-child,
+   blockquote:last-child {margin-bottom:0; padding-bottom:0; }
+   
+   li ol, li ul {padding-left:2em; } /* Nested lists. */
+
+   /* Normally, every article gets a line below it; every section .75 lines. But if we don't have multiple articles, it's nicer to give
+      sections a full line instead. */
+   article section {padding-bottom:1.75em; } /* full line on sections */ 
+   article section section, article article section {padding-bottom:1.3125em; } /* unless we have nested articles on sections */
+
+	
+   /* LAYOUT; Some of these aren't actually interactions, but I'm putting them here anyway to keep layout stuff together */
+	.media .img.supporting {float:right; margin-left:1.1318897em; margin-right:0; }
+	
+	
+
+/********* UNIQUE STUFF (& TO DO) ************/
+    	#banner {position:relative; }
+    	#banner h1 {font-size:1.625em; line-height: 0.96153em !important; margin-bottom:.155em !important; }
+	#banner nav {position:relative; top:.8em !important; }
+	#banner img {position:relative; bottom:-.125em; }
+	#banner .optionList {display:inline;}
+	#banner .optionList:after {content:none;}
+	#banner nav {position:relative;}
+	#banner .optionList{position:absolute; right:0.1875em;}
+
+
+/***** PRINT STYLES. INLINED HERE TO SAVE AN HTTP REQUEST, BUT THIS (OF COURSE) MAY NOT BE OPTIMAL IN EVRY CASE. *****/
+@media print {
+	/** POTENTIALLY CUSTOMIZE **/
+	a, a:visited { color: #333 !important; text-decoration: underline; }
+	/* if we're using relative urls a[href^="/"]:after { content: " (http://www.mymorguefile.com" attr(href) ") "; } */
+	body:not(.for-pdf) a[href]:after { content: " (" attr(href) ")"; }
+
+	pre, blockquote { border: 1px solid #999; }
+	thead { display: table-header-group; } /* css-discuss.incutio.com/wiki/Printing_Tables */
+    p, h2, h3 { orphans: 3; widows: 3; }
+	
+	
+	/** GENERIC **/
+	@page { margin: 0.5cm; }
+	
+	body, body * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; 
+	    -ms-filter: none !important; border:0 !important; } /* Black prints faster: sanbeiji.com/archives/953 */
+
+		
+	.hide-on-print {display:none !important;}
+	
+	abbr[title]:after { content: " (" attr(title) ")"; }
+  	.ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content:""; } /* Don't show urls on images, or javascript/internal links */
+	
+	pre, blockquote, tr, img, h1, h2, h3 {page-break-inside: avoid; }
+}

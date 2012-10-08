@@ -1,0 +1,6 @@
+1. Backstory - text from last night...for roomates
+2. Wanted full MVC in 1 night
+3. ExpressJS on node.js for routing
+4. Mongoose ORM for mongodb for the model
+5. Redis for session data in ~2 lines
+6. Google Caja for front end security is ported to serverside

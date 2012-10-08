@@ -1,0 +1,115 @@
+!!!5
+html
+  head
+    title Roommate Rancor
+    meta(name='keywords', content='roommate, rancor, complain, stories')
+    meta(name='description', content='Roommate Rancor is a place to share stories about terrible roommates so that you can feel better about your current living situation')
+    link(rel='stylesheet', href='../stylesheets/twitter.css', type='text/css')
+    link(rel='stylesheet', href='../stylesheets/foundation.css', type='text/css')
+    link(rel='stylesheet', href='../stylesheets/app.css', type='text/css')
+    link(rel='stylesheet', href='../stylesheets/ie.css', type='text/css')
+    link(rel='stylesheet', href='../stylesheets/reveal.css', type='text/css')
+    script(src='../javascripts/jquery.min.js')
+    script(src='../javascripts/foundation.js')
+    script(src='../javascripts/modernizr.foundation.js')
+    script(src='../javascripts/jquery.reveal.js')
+    script(src='../javascripts/jquery.timeago.js')
+    script
+      //timeago JS
+      jQuery(document).ready(function() {
+      jQuery("time.timeago").timeago();
+      });
+      //ajax post like/dislike buttons
+      function vote(rantID, type)
+      {
+      $.ajax({
+      url: "/vote/"+type.toString(),
+      type: "POST",
+      data: {'id':rantID.toString()},
+      timeout: 5000,
+      complete: function() {
+      //called when complete
+      console.log('The client clicked the '+type+'button.');
+      },
+      success: function(data) {
+      $('#'+rantID).text(data.votes+" ");
+      },
+      error: function() {
+      alert("We're Sorry, but your "+type+" vote of rant "+rantID+" was not logged because we could not connect to the server");
+      },
+      });
+      }
+    body
+        //
+          start nav
+        .global-nav(style='position: fixed; z-index: 10;')
+          .global-nav-inner
+            .row
+              .nine.columns.centered
+                ul.nav
+                  li
+                    a.js-hover(href='/')
+                      h4(style='color: white; margin-top: -5px;') Roomate Rancor
+                ul.nav(style='float: right;')
+                  li.topics
+                    //
+                    a.js-hover(href='/', data-component-term='home_nav')
+                      | Home
+                  li.home.active.new(data-global-action='discover')
+                    a.js-hover(href='/about')
+                      | About
+                  li.topics(data-global-action='discover')
+                    a.js-hover(data-reveal-id='complainForm', href='')
+                      | Submit
+        //
+          end nav
+        //
+          start complaints
+        br
+        br
+        br
+        a(name='#-1')
+        .row
+          .container.nine.columns.centered(style='margin-left: auto; margin-right: auto;')
+            //
+              start complaint
+            .panel
+              .row
+                .ten.columns
+                  h3
+                    a(href='#', onclick='vote(\'-1\',\'like\')', style='text-decoration: none;') +
+                    | (
+                    b.num(id='-1')
+                        &infin;
+                    | )
+                    a(href='#', onclick='vote(\'-1\',\'dislike\')', style='text-decoration: none;') -
+                .two.columns
+                  time.timeago(datetime='2012-02-29T09:24:17Z') February 29, 2012
+              .row
+                .eight.columns.centered
+                  h5
+                    | Roommate Rancor is a completely anonymous place on the web for you to post all stupid shit your roommate does that annoys the fuck out of you or anyone else in your dorm. When you're far away from home and living with others, sometimes you'd just wish your roommate were not irritating or psychopathic. And after a while, your other friends at college can only listen to you complain so much. So rant here...and maybe, just maybe...your roommate will grow the fuck up.
+                  br
+                  h5 
+                    | P.S. If you think itâ€™s okay to leave your half-eaten crepes on the floor, shed your black long hair in the shower and never pick it up, Skype naked with your boyfriend almost every day or have your boyfriend butt-fuck you while Iâ€™m in the room, you fucking need help.
+              .row
+                .ten.columns @ NYU
+                .two.columns  
+                  a.small.white.button(href='#', style='text-decoration: none;') Share
+              .row
+                .two.columns.centered
+                  p
+        //
+          end complaint
+        #complainForm.reveal-modal
+          form(method='post', action='/add')
+            fieldset
+              h5 This is the part where you get to complain about your roomate.
+              textarea(name='content', style='width: 100%; height: 100px;') Put your complaint in this box
+              .row
+                .six.columns
+                  textarea(name='location', style='width: auto; height: auto;') And location here
+                .six.columns
+                  input.medium.black.button(style='text-decoration: none;', type='submit', value='Submit Complaint')
+              p.lead *note: Don't be a bitch. Only post if it's funny.
+          a.close-reveal-modal Ã—

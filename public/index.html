@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Backbone.js Tests</title>
+  </head>
+  <body>
+    <button id="add-rant">Add Rant</button>
+    <ul id="rant-list">
+    </ul>
+
+    
+    
+    
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/underscore.js/1.1.4/underscore-min.js"></script>
+    <script src="http://ajax.cdnjs.com/ajax/libs/backbone.js/0.3.3/backbone-min.js"></script>
+    <script>
+      (function ($) {
+      
+        Rant = Backbone.Model.extend({
+          content: null,
+          likes: 0.
+          location: null,
+          timestamp: new Date(),
+          urlSlug: null
+        });
+        
+        Rants = Backbone.Collection.extend({
+          initialize: function(models, options){
+            this.bind("add", options.view.addRantLi);
+          }
+        });
+        
+        window.AppView = Backbone.View.extend({
+          el: $('body'),
+          initialize: function(){
+            this.rants = new Rants( null, {view :this});
+          },
+          events: {
+            "click #add-rant": "showPrompt"
+          },
+          showPrompt: function() {
+            var rant_content = prompt("So. . . What did your roomate do that's worse then the " + this.rants.length + " other complaints on this website?");
+            var rant_model = new Rant({content: rant_content });
+            this.rants.add( rant_model );
+          },
+          addRantLi: function (model) {
+            $("#rant-list").append("<li>" + model.get('content') + "</li>");  
+          }
+        });
+        
+        var appview = new AppView;
+        
+      })(jQuery);
+    </script>
+  
+  </body>
+<html>

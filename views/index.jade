@@ -1,0 +1,83 @@
+!!!
+html
+	head
+		title Roommate Rancor
+		meta(name='keywords', content='roommate, rancor, complain, stories')
+		meta(name='description', content='Roommate Rancor is a place to share stories about terrible roommates so that you can feel better about your current living situation')
+		link(rel='stylesheet', href='../stylesheets/reset.css', type='text/css')
+		script(src='../javascripts/jquery.min.js')
+		script(src='../javascripts/foundation.js')
+		script(src='../javascripts/modernizr.foundation.js')
+		script(src='../javascripts/jquery.reveal.js')
+		script(src='../javascripts/jquery.timeago.js')
+		script
+			jQuery(document).ready(function() {
+			jQuery("time.timeago").timeago();
+			});
+			function vote(rantID, type)
+			{
+			$.ajax({
+			url: "/vote/"+type.toString(),
+			type: "POST",
+			data: {'id':rantID.toString()},
+			timeout: 5000,
+			complete: function() {
+			console.log('The client clicked the '+type+'button.');
+			},
+			success: function(data) {
+			$('#'+rantID).html(data.votes);
+			},
+			error: function() {
+			alert("We're Sorry, but your "+type+" vote of rant "+rantID+" was not logged because we could not connect to the server");
+			},
+			});
+			}
+	body
+		.global-nav(style='position: absolute; z-index: 10;')
+			.global-nav-inner
+				.row
+					.nine.columns.centered
+						ul.nav
+							li
+								a.js-hover(href='/')
+									h4(style='color: white; margin-top: -5px;') Roommate Rancor
+						ul.nav(style='float: right;')
+							li.home.active.new
+								a.js-hover(href='/', data-component-term='home_nav')
+									| Home
+							li.topics(data-global-action='discover')
+								a.js-hover(href='/about')
+									| About
+							li.topics(data-global-action='discover')
+								a.js-hover(data-reveal-id='complainForm', href='')
+									| Submit
+			for complaint in complaints
+				a(name='#{complaint._id}')
+					.grid-8(style='margin-left: auto; margin-right: auto;')
+						.grid-6
+							h3
+								a(href='#', onclick='vote(\'#{complaint._id}\',\'like\')', style='text-decoration: none;') +
+								|  (
+								b.num(id='#{complaint._id}') #{complaint.likes}
+								|  )
+								a(href='#', onclick='vote(\'#{complaint._id}\',\'dislike\')', style='text-decoration: none;') -
+						.grid-2.last-col
+							time.timeago(datetime='#{complaint.timestamp}') #{complaint.timestamp}
+						.grid-6.last-col(style='margin-left: auto; margin-right: auto;')
+							h5 #{complaint.content}
+						.grid-6
+							.ten.columns @ #{complaint.location} 
+						.grid-2.last-col
+							a.small.white.button(href='#', style='text-decoration: none;') Share
+		#complainForm.reveal-modal
+			form(method='post', action='/add')
+			fieldset
+				h5 This is the part where you get to complain about your roomate.
+				textarea(name='content', style='width: 100%; height: 100px;') Put your complaint in this box
+				.row
+					.six.columns
+						textarea(name='location', style='width: auto; height: auto;') And location here
+					.six.columns
+						input.medium.black.button(style='text-decoration: none;', type='submit', value='Submit Complaint')
+			p.lead *note: Don't be a bitch. Only post if it's funny.
+			a.close-reveal-modal Ã—
